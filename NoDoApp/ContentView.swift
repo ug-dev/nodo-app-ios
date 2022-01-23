@@ -20,16 +20,9 @@ class MyTodoData: ObservableObject {
     @Published var isDone = false
 }
 
-struct PrintMyTodoData: View {
-    @EnvironmentObject var todoData: MyTodoData
-
-    var body: some View {
-        Text("Score: \(todoData.title)")
-    }
-}
-
 struct ModalView: View {
     @EnvironmentObject var todoDataItem: MyTodoData
+    @StateObject var updateTodoDataItem = MyTodoData()
     @Binding var isShowing: Bool
     @Binding var editNodo: String
     @State var globalListState = GlobalListState()
@@ -65,7 +58,7 @@ struct ModalView: View {
                     .foregroundColor(.white)
                     .onSubmit {
                         print("🚀🚀🚀🚀okay \(editNodo) isDone: \(todoDataItem.isDone) Id: \(todoDataItem.id)")
-                        globalListState.loading = true
+                        todoDataItem.title = editNodo
                         updateTodoApi(isDone: todoDataItem.isDone, id: todoDataItem.id, title: editNodo)
                         self.editNodo = ""
                         isShowing = false
@@ -204,7 +197,9 @@ struct ContentView: View {
                     }
                     
                     //Modal
-                    ModalView(isShowing: $showModel, editNodo: $editNodo)
+                    if (showModel) {
+                        ModalView(isShowing: $showModel, editNodo: $editNodo)
+                    }
                     
             }
                 .navigationBarTitle(Text("NoDo APP"))
@@ -312,9 +307,11 @@ struct NodoRow: View {
     @State var Id: Int
     @State var nodoItem: String = ""
     @State var nodoToggle: Bool = false
+    @EnvironmentObject var todoDataItem: MyTodoData
     
     var body: some View {
                 HStack{
+                    
                     Text(nodoItem)
                         .strikethrough(self.nodoToggle, color:  Color.gray)
                         .foregroundColor(self.nodoToggle ? Color.gray : .accentColor)
