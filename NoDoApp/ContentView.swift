@@ -12,11 +12,97 @@ struct GlobalListState {
     var loading = true
 }
 
+class MyTodoData: ObservableObject {
+    @Published var id = 0
+    @Published var title = "some text"
+    @Published var description = "some text"
+    @Published var date = "some text"
+    @Published var isDone = false
+}
+
+struct PrintMyTodoData: View {
+    @EnvironmentObject var todoData: MyTodoData
+
+    var body: some View {
+        Text("Score: \(todoData.title)")
+    }
+}
+
+struct ModalView: View {
+    @EnvironmentObject var todoDataItem: MyTodoData
+    @Binding var isShowing: Bool
+    @Binding var editNodo: String
+    @State var globalListState = GlobalListState()
+    
+    var body: some View {
+        
+        ZStack(alignment: .bottom) {
+            if (isShowing) {
+                Color.black
+                    .opacity(0.3)
+                    .ignoresSafeArea()
+                
+                mainView
+                .transition(.move(edge: .bottom))
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+        .ignoresSafeArea()
+        .animation(.easeInOut, value: isShowing)
+    }
+    
+    var mainView: some View {
+        VStack {
+            HStack{
+            Image(systemName: "plus.circle")
+                    .foregroundColor(Color.white)
+        
+            Group{
+                TextField(
+                        "What will you not do today",
+                        text: self.$editNodo
+                )
+                    .foregroundColor(.white)
+                    .onSubmit {
+                        print("🚀🚀🚀🚀okay \(editNodo) isDone: \(todoDataItem.isDone) Id: \(todoDataItem.id)")
+                        globalListState.loading = true
+                        updateTodoApi(isDone: todoDataItem.isDone, id: todoDataItem.id, title: editNodo)
+                        self.editNodo = ""
+                        isShowing = false
+                    }
+                    .padding(.all, 12)
+                    .accessibilityIgnoresInvertColors()
+                    
+            }.background(Color.black)
+                .clipShape(RoundedRectangle(cornerRadius: 7))
+                .shadow(radius: 4)
+            
+        }
+        .padding(.horizontal, 14)
+            
+            Button {
+                isShowing = false
+            } label: {
+                Text("Cancel")
+                    .foregroundColor(.white)
+                    .padding(.vertical, 30)
+            }
+        }
+        .frame(height: UIScreen.main.bounds.size.height)
+        .frame(maxWidth: .infinity)
+        .background(Color("my-color"))
+        .opacity(0.3)
+    }
+}
+
 struct ContentView: View {
+    @StateObject var todoDataItem = MyTodoData()
     @State var globalListState = GlobalListState()
     @State var nodoList = [TodoDataModel]()
+    @State var showModel = false
+    @State var editNodo = ""
     @State var nodo: String = ""
-    @State private var showingAlert = false
+
     
     func fetchTodos() {
         guard let url = URL(string: "https://todo-python-heroku.herokuapp.com/") else {return}
@@ -38,12 +124,11 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView{
-            VStack{
-                HStack{
+            ZStack{
+                VStack{
+                    HStack{
                     Image(systemName: "plus.circle")
-                        .alert("Important message", isPresented: $showingAlert) {
-                                   Button("OK", role: .cancel) { }
-                               }
+                  
                     Group{
                         TextField(
                                 "What will you not do today",
@@ -51,11 +136,16 @@ struct ContentView: View {
                         )
                             .foregroundColor(.white)
                             .onSubmit {
-                                print("🚀🚀🚀🚀okay \(nodo)")
-                                globalListState.loading = true
-                                addTodoApi(todo: self.nodo)
-                                fetchTodos()
-                                self.nodo = ""
+                                if (nodo != "") {
+                                    print("🚀🚀🚀🚀okay \(nodo)")
+                                    globalListState.loading = true
+                                    addTodoApi(todo: self.nodo)
+                                    fetchTodos()
+                                    self.nodo = ""
+                                } else {
+                                    print("No Bitch!")
+                                }
+                                
                             }
                             .padding(.all, 12)
                             .accessibilityIgnoresInvertColors()
@@ -80,16 +170,23 @@ struct ContentView: View {
                     }.padding(.top, 34)
                 }
                     List {
-                        ForEach(nodoList.reversed()) { item in
+                        ForEach(nodoList) { item in
                             NodoRow(Id: item.id, nodoItem: item.title,nodoToggle: item.isDone)
-//                                .swipeActions(edge: .leading, allowsFullSwipe: false) {
-//                                        Button(action: {
-//                                            // edit
-//                                        }) {
-//                                            Image(systemName: "pencil.circle.fill")
-//                                        }
-//                                        .tint(.blue)
-//                                    }
+                                .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                                        Button(action: {
+                                            // edit
+                                            todoDataItem.id = item.id
+                                            todoDataItem.title = item.title
+                                            todoDataItem.description = item.description
+                                            todoDataItem.date = item.date
+                                            todoDataItem.isDone = item.isDone
+                                            print("🚀ID: \(item.id)")
+                                            showModel = true
+                                        }) {
+                                            Image(systemName: "pencil.circle.fill")
+                                        }
+                                        .tint(.blue)
+                                    }
                                 .swipeActions(allowsFullSwipe: true) {
                                     Button(action: {
                                         deleteTodo(tododDataModel: item)
@@ -105,11 +202,18 @@ struct ContentView: View {
                     .refreshable {
                         fetchTodos()
                     }
-            }.navigationBarTitle(Text("NoDo APP"))
+                    
+                    //Modal
+                    ModalView(isShowing: $showModel, editNodo: $editNodo)
+                    
+            }
+                .navigationBarTitle(Text("NoDo APP"))
         }
         .onAppear {
             fetchTodos()
         }
+        }
+        .environmentObject(todoDataItem)
     }
     
     func deleteTodo(tododDataModel: TodoDataModel) {
@@ -143,23 +247,27 @@ func addTodoApi(todo: String) {
         }
         
         let dataList = try! JSONDecoder().decode([TodoDataModel].self, from: data)
+        print("🚀🚀🚀🚀 Todo Added: \(dataList)")
 //        globalListState.nodoList = dataList
         globalListState.loading = false
     }
     task.resume()
 }
 
-func updateTodoApi(isDone: Bool, id: Int) {
+func updateTodoApi(isDone: Bool, id: Int, title: String) {
     @State var globalListState = GlobalListState()
     guard let url = URL(string: "https://todo-python-heroku.herokuapp.com/updateTodo/\(id)/") else {return}
     var request = URLRequest(url: url)
     
     print("making api call....")
+    print("🚀Title \(title)")
+    print("🚀isDone \(isDone)")
     
     //method headers
     request.httpMethod = "PATCH"
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
     let body: [String: AnyHashable] = [
+        "title": title,
         "isDone": isDone,
     ]
     
@@ -171,6 +279,7 @@ func updateTodoApi(isDone: Bool, id: Int) {
         }
         
         let dataList = try! JSONDecoder().decode([TodoDataModel].self, from: data)
+        print("🚀🚀🚀🚀 Todo Updated: \(dataList)")
 //        globalListState.nodoList = dataList
     }
     task.resume()
@@ -193,6 +302,7 @@ func deleteTodoApi(id: Int) {
         }
         
         let dataList = try! JSONDecoder().decode([TodoDataModel].self, from: data)
+        print("🚀🚀🚀🚀 Todo Deleted: \(dataList)")
 //        globalListState.nodoList = dataList
     }
     task.resume()
@@ -221,7 +331,7 @@ struct NodoRow: View {
                 .lineSpacing(12)
                 .onTapGesture {
                     print("🚀hello update \(!self.nodoToggle) \(Id)")
-                    updateTodoApi(isDone: !self.nodoToggle, id: Id)
+                    updateTodoApi(isDone: !self.nodoToggle, id: Id, title: nodoItem)
                     self.nodoToggle = !self.nodoToggle
                 }
     }
