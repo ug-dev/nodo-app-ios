@@ -27,6 +27,7 @@ struct ModalView: View {
     @Binding var editNodo: String
     @State var globalListState = GlobalListState()
     
+
     var body: some View {
         
         ZStack(alignment: .bottom) {
@@ -54,6 +55,7 @@ struct ModalView: View {
                 TextField(
                         "What will you not do today",
                         text: self.$editNodo
+                        
                 )
                     .foregroundColor(.white)
                     .onSubmit {
@@ -245,7 +247,6 @@ func addTodoApi(todo: String) {
         
         let dataList = try! JSONDecoder().decode([TodoDataModel].self, from: data)
         print("🚀🚀🚀🚀 Todo Added: \(dataList)")
-//        globalListState.nodoList = dataList
         globalListState.loading = false
     }
     task.resume()
@@ -278,8 +279,6 @@ func updateTodoApi(isDone: Bool, id: Int, title: String) {
         
         let dataList = try! JSONDecoder().decode([TodoDataModel].self, from: data)
         print("🚀🚀🚀🚀 Todo Updated: \(dataList)")
-        let my = ContentView()
-        my.fetchTodos()
     }
     task.resume()
 }
@@ -327,7 +326,7 @@ struct NodoRow: View {
                         
                     Spacer()
                     Image(systemName:  (self.nodoToggle) ? "checkmark" : "square") //checkmark
-                        .padding(.trailing, 4)
+                        .padding(.trailing, 6)
                 }
                 .padding(.vertical, 12)
                 .cornerRadius(8)
