@@ -315,13 +315,15 @@ struct NodoRow: View {
     
     var body: some View {
                 HStack{
-                    
-                    Text(nodoItem)
+                    Text(todoDataItem.id == Id ? todoDataItem.title : nodoItem)
                         .strikethrough(self.nodoToggle, color:  Color.gray)
                         .foregroundColor(self.nodoToggle ? Color.gray : .accentColor)
                         .multilineTextAlignment(.leading)
                         .opacity(self.nodoToggle ? 0.4 : 1)
                         .lineLimit(2)
+                        .onAppear {
+                            print("this \(todoDataItem.id == Id ? "true":"false")")
+                        }
                         
                     Spacer()
                     Image(systemName:  (self.nodoToggle) ? "checkmark" : "square") //checkmark
