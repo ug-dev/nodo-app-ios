@@ -59,6 +59,7 @@ struct ModalView: View {
                     .onSubmit {
                         print("🚀🚀🚀🚀okay \(editNodo) isDone: \(todoDataItem.isDone) Id: \(todoDataItem.id)")
                         todoDataItem.title = editNodo
+                        globalListState.loading = true
                         updateTodoApi(isDone: todoDataItem.isDone, id: todoDataItem.id, title: editNodo)
                         self.editNodo = ""
                         isShowing = false
@@ -99,7 +100,7 @@ struct ContentView: View {
     
     func fetchTodos() {
         guard let url = URL(string: "https://todo-python-heroku.herokuapp.com/") else {return}
-        print("okay")
+        print("okay fetch fuck")
         URLSession.shared
             .dataTask(with: url) {
                 (data, _, _) in
@@ -111,6 +112,7 @@ struct ContentView: View {
                 DispatchQueue.main.async {
                     nodoList = dataList
                     globalListState.loading = false
+                    print("🚀🚀🚀🚀 nodoList \(nodoList)")
                 }
             }.resume()
     }
@@ -182,7 +184,7 @@ struct ContentView: View {
                                     }
                                 .swipeActions(allowsFullSwipe: true) {
                                     Button(action: {
-                                        deleteTodo(tododDataModel: item)
+                                        deleteTodo(todoDataModel: item)
                                         print("do something\(item.id)")
                                         deleteTodoApi(id: item.id)
                                     }) {
@@ -211,8 +213,8 @@ struct ContentView: View {
         .environmentObject(todoDataItem)
     }
     
-    func deleteTodo(tododDataModel: TodoDataModel) {
-        if let indexToDelete = nodoList.firstIndex(where: {$0.id == tododDataModel.id}) {
+    func deleteTodo(todoDataModel: TodoDataModel) {
+        if let indexToDelete = nodoList.firstIndex(where: {$0.id == todoDataModel.id}) {
             self.nodoList.remove(at: indexToDelete)
         }
     }
@@ -250,6 +252,7 @@ func addTodoApi(todo: String) {
 }
 
 func updateTodoApi(isDone: Bool, id: Int, title: String) {
+    @EnvironmentObject var todoDataItem: MyTodoData
     @State var globalListState = GlobalListState()
     guard let url = URL(string: "https://todo-python-heroku.herokuapp.com/updateTodo/\(id)/") else {return}
     var request = URLRequest(url: url)
@@ -275,7 +278,8 @@ func updateTodoApi(isDone: Bool, id: Int, title: String) {
         
         let dataList = try! JSONDecoder().decode([TodoDataModel].self, from: data)
         print("🚀🚀🚀🚀 Todo Updated: \(dataList)")
-//        globalListState.nodoList = dataList
+        let my = ContentView()
+        my.fetchTodos()
     }
     task.resume()
 }
