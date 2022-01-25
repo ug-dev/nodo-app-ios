@@ -14,6 +14,13 @@
 		4B5681772795B19700A4E038 /* NoDoAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5681762795B19700A4E038 /* NoDoAppTests.swift */; };
 		4B5681812795B19700A4E038 /* NoDoAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5681802795B19700A4E038 /* NoDoAppUITests.swift */; };
 		4B5681832795B19700A4E038 /* NoDoAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5681822795B19700A4E038 /* NoDoAppUITestsLaunchTests.swift */; };
+		4B62B300279FE407009A34FD /* AddTodoApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B62B2FF279FE407009A34FD /* AddTodoApi.swift */; };
+		4B62B302279FE42E009A34FD /* UpdateTodoApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B62B301279FE42E009A34FD /* UpdateTodoApi.swift */; };
+		4B62B304279FE445009A34FD /* DeleteTodoApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B62B303279FE445009A34FD /* DeleteTodoApi.swift */; };
+		4B62B308279FE488009A34FD /* NodoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B62B307279FE488009A34FD /* NodoRow.swift */; };
+		4B62B30A279FE52B009A34FD /* ModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B62B309279FE52B009A34FD /* ModelView.swift */; };
+		4B62B30C279FE55B009A34FD /* MyTodoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B62B30B279FE55B009A34FD /* MyTodoData.swift */; };
+		4B62B30E279FE657009A34FD /* GlobalListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B62B30D279FE657009A34FD /* GlobalListState.swift */; };
 		4BB4D660279949A7002251C7 /* TodoDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB4D65F279949A7002251C7 /* TodoDataModel.swift */; };
 		4BFE695C279AC0E800442C6B /* ActivityIndicatorView in Frameworks */ = {isa = PBXBuildFile; productRef = 4BFE695B279AC0E800442C6B /* ActivityIndicatorView */; };
 /* End PBXBuildFile section */
@@ -46,6 +53,13 @@
 		4B56817C2795B19700A4E038 /* NoDoAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NoDoAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B5681802795B19700A4E038 /* NoDoAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoDoAppUITests.swift; sourceTree = "<group>"; };
 		4B5681822795B19700A4E038 /* NoDoAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoDoAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		4B62B2FF279FE407009A34FD /* AddTodoApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTodoApi.swift; sourceTree = "<group>"; };
+		4B62B301279FE42E009A34FD /* UpdateTodoApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateTodoApi.swift; sourceTree = "<group>"; };
+		4B62B303279FE445009A34FD /* DeleteTodoApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteTodoApi.swift; sourceTree = "<group>"; };
+		4B62B307279FE488009A34FD /* NodoRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodoRow.swift; sourceTree = "<group>"; };
+		4B62B309279FE52B009A34FD /* ModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelView.swift; sourceTree = "<group>"; };
+		4B62B30B279FE55B009A34FD /* MyTodoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTodoData.swift; sourceTree = "<group>"; };
+		4B62B30D279FE657009A34FD /* GlobalListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalListState.swift; sourceTree = "<group>"; };
 		4BB4D65F279949A7002251C7 /* TodoDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoDataModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -98,11 +112,12 @@
 		4B5681642795B19600A4E038 /* NoDoApp */ = {
 			isa = PBXGroup;
 			children = (
+				4B62B30F279FE677009A34FD /* Components */,
+				4B62B2FE279FE3C5009A34FD /* Api */,
 				4B5681652795B19600A4E038 /* NoDoAppApp.swift */,
 				4B5681672795B19600A4E038 /* ContentView.swift */,
 				4B5681692795B19700A4E038 /* Assets.xcassets */,
 				4B56816B2795B19700A4E038 /* Preview Content */,
-				4BB4D65F279949A7002251C7 /* TodoDataModel.swift */,
 			);
 			path = NoDoApp;
 			sourceTree = "<group>";
@@ -130,6 +145,28 @@
 				4B5681822795B19700A4E038 /* NoDoAppUITestsLaunchTests.swift */,
 			);
 			path = NoDoAppUITests;
+			sourceTree = "<group>";
+		};
+		4B62B2FE279FE3C5009A34FD /* Api */ = {
+			isa = PBXGroup;
+			children = (
+				4B62B2FF279FE407009A34FD /* AddTodoApi.swift */,
+				4B62B301279FE42E009A34FD /* UpdateTodoApi.swift */,
+				4B62B303279FE445009A34FD /* DeleteTodoApi.swift */,
+			);
+			path = Api;
+			sourceTree = "<group>";
+		};
+		4B62B30F279FE677009A34FD /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				4BB4D65F279949A7002251C7 /* TodoDataModel.swift */,
+				4B62B307279FE488009A34FD /* NodoRow.swift */,
+				4B62B309279FE52B009A34FD /* ModelView.swift */,
+				4B62B30B279FE55B009A34FD /* MyTodoData.swift */,
+				4B62B30D279FE657009A34FD /* GlobalListState.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -268,9 +305,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B62B30E279FE657009A34FD /* GlobalListState.swift in Sources */,
+				4B62B308279FE488009A34FD /* NodoRow.swift in Sources */,
+				4B62B300279FE407009A34FD /* AddTodoApi.swift in Sources */,
+				4B62B304279FE445009A34FD /* DeleteTodoApi.swift in Sources */,
 				4B5681682795B19600A4E038 /* ContentView.swift in Sources */,
+				4B62B302279FE42E009A34FD /* UpdateTodoApi.swift in Sources */,
 				4BB4D660279949A7002251C7 /* TodoDataModel.swift in Sources */,
+				4B62B30A279FE52B009A34FD /* ModelView.swift in Sources */,
 				4B5681662795B19600A4E038 /* NoDoAppApp.swift in Sources */,
+				4B62B30C279FE55B009A34FD /* MyTodoData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
